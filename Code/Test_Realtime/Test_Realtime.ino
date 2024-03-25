@@ -1,0 +1,45 @@
+#include <Wire.h>
+#include <RTClib.h>
+
+RTC_DS3231 rtc;
+
+#define SDA_PIN 21
+#define SCL_PIN 19
+
+char daysOfTheWeek[7][12] = {"Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"};
+
+void setup() {
+  Serial.begin(9600);
+  Wire.begin(SDA_PIN, SCL_PIN);
+
+  if (!rtc.begin()) {
+    Serial.println("Couldn't find RTC");
+    while (1);
+  }
+
+  if (rtc.lostPower()) {
+    Serial.println("RTC lost power, let's set the time!");
+    rtc.adjust(DateTime(F(__DATE__), F(__TIME__)));
+  }
+}
+
+void loop() {
+  DateTime now = rtc.now();
+
+  Serial.print(now.year(), DEC);
+  Serial.print('/');
+  Serial.print(now.month(), DEC);
+  Serial.print('/');
+  Serial.print(now.day(), DEC);
+  Serial.print(" ");
+  Serial.print(now.hour(), DEC);
+  Serial.print(':');
+  Serial.print(now.minute(), DEC);
+  Serial.print(':');
+  Serial.print(now.second(), DEC);
+  Serial.print(" Day of week: ");
+  Serial.println(daysOfTheWeek[now.dayOfTheWeek()]); 
+  delay(1000);
+}
+
+
