@@ -89,12 +89,13 @@ void loop() {
       lcd.print(0, 0, String("MÁY BƠM ĐANG MỞ "));
       Serial.println("VALUE TIME=0");
     }
-    else if (setTimeInSecs > 0 && millis() - wait > setTimeInSecs*1000) 
+    else if (setTimeInSecs > 0 && millis() - wait > setTimeInSecs*1000+60000) 
     {
       digitalWrite(relayPump, 0);
       Blynk.virtualWrite(V4, 0);
       lcd.print(0, 0, String("MÁY BƠM ĐANG TẮT"));
       Serial.println("TIME OVER");
+      ESP.restart();
     }
     else 
     {
