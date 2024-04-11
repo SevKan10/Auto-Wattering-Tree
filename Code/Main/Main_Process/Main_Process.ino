@@ -1,6 +1,6 @@
 /*==========LIBRARY==========*/
 
-#define BLYNK_FIRMWARE_VERSION "1.0.0"
+#define BLYNK_FIRMWARE_VERSION "1.0.1"
 #define BLYNK_PRINT Serial
 #define BLYNK_TEMPLATE_ID "TMPL6XAznY3Lo"
 #define BLYNK_TEMPLATE_NAME "SMART HOME"
@@ -9,6 +9,7 @@
 #include <WiFi.h>
 #include <WiFiClient.h>
 #include <BlynkSimpleEsp32.h>
+#include <ArduinoOTA.h>
 /*---------BLYNK----------*/
 
 #include <Wire.h>
@@ -49,8 +50,10 @@ void ringBell(int delayTimes, int repeatTimes);
 /*==========MAIN==========*/
 void setup() {
   Serial.begin(9600);
+  WiFi.begin(ssid,pass);
 
-  Blynk.begin(auth, ssid, pass);
+  while(WiFi.status() != WL_CONNECTED){delay(500);}
+  
   Wire.begin(SDA_PIN, SCL_PIN);
   EEPROM.begin(1024);
 
@@ -73,9 +76,12 @@ void setup() {
   ringBell(100,2);
   Serial.println("");
   Serial.println("PROGRAMING IS STARTED");
+  ArduinoOTA.begin();
 }
 
 void loop() {
+  ArduinoOTA.handle();
+  resetFuction();
   buttonRelayPump();
   Blynk.run();
   DateTime now = rtc.now();

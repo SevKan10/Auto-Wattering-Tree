@@ -41,3 +41,21 @@ void buttonRelayPump() {
   lastButtonState = digitalRead(buttonPump);
 }
 
+void resetFuction()
+{
+  DateTime now = rtc.now();
+  if(now.hour()== 0 && now.minute() == 0)
+  {
+    ESP.restart();
+  }
+  if( now.hour()== 12 && now.minute() == 0 )
+  {
+    ESP.restart();
+  }
+  if(now.hour()== 5 && now.minute() == 0)
+  {
+    ESP.restart();
+  }
+}
+
+
