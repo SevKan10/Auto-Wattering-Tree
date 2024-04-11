@@ -53,7 +53,7 @@ void setup() {
   WiFi.begin(ssid,pass);
 
   while(WiFi.status() != WL_CONNECTED){delay(500);}
-  
+  Blynk.begin(auth, ssid, pass);
   Wire.begin(SDA_PIN, SCL_PIN);
   EEPROM.begin(1024);
 
@@ -81,7 +81,7 @@ void setup() {
 
 void loop() {
   ArduinoOTA.handle();
-  resetFuction();
+  //resetFuction();
   buttonRelayPump();
   Blynk.run();
   DateTime now = rtc.now();
