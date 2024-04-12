@@ -9,6 +9,8 @@
 #include <WiFi.h>
 #include <WiFiClient.h>
 #include <BlynkSimpleEsp32.h>
+#include <ESPmDNS.h>
+#include <WiFiUdp.h>
 #include <ArduinoOTA.h>
 /*---------BLYNK----------*/
 
@@ -50,9 +52,15 @@ void ringBell(int delayTimes, int repeatTimes);
 /*==========MAIN==========*/
 void setup() {
   Serial.begin(9600);
+  WiFi.mode(WIFI_STA);
   WiFi.begin(ssid,pass);
 
-  while(WiFi.status() != WL_CONNECTED){delay(500);}
+  while (WiFi.waitForConnectResult() != WL_CONNECTED) {
+    Serial.println("Connection Failed! Rebooting...");
+    delay(5000);
+    ESP.restart();
+  }
+
   Blynk.begin(auth, ssid, pass);
   Wire.begin(SDA_PIN, SCL_PIN);
   EEPROM.begin(1024);
@@ -81,6 +89,7 @@ void setup() {
 
 void loop() {
   ArduinoOTA.handle();
+  if (!Blynk.connected() || WiFi.status() != WL_CONNECTED){ESP.restart();}
   //resetFuction();
   buttonRelayPump();
   Blynk.run();
