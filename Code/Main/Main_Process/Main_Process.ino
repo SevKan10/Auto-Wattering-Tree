@@ -42,6 +42,7 @@ bool buttonBlynk;
 unsigned long currentTime;
 unsigned long setTimeInSecs;
 unsigned long wait; 
+unsigned long timeWait; 
 
 char daysOfTheWeek[8][12] = { "None", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday" };
 
@@ -89,8 +90,10 @@ void setup() {
 
 void loop() {
   ArduinoOTA.handle();
+  if (millis() - timeWait >=700){Blynk.virtualWrite(V5,random(1,100)); timeWait = millis();}
+
   if (!Blynk.connected() || WiFi.status() != WL_CONNECTED){ESP.restart();}
-  //resetFuction();
+  resetFuction();
   buttonRelayPump();
   Blynk.run();
   DateTime now = rtc.now();
